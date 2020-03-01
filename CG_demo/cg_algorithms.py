@@ -34,10 +34,11 @@ def draw_line(p_list, algorithm):
         cur_x = x0
         cur_y = y0
         for i in range(steps):
-            result.append([int(cur_x), int(cur_y)])
+            result.append([int(cur_x+0.5), int(cur_y+0.5)])
             cur_x += delta_x
             cur_y += delta_y
-        result.append([int(x1), int(y1)])
+
+        result.append([x1, y1])
 
     elif algorithm == 'Bresenham':
         pass
