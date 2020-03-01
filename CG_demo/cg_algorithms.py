@@ -26,7 +26,19 @@ def draw_line(p_list, algorithm):
             for x in range(x0, x1 + 1):
                 result.append((x, int(y0 + k * (x - x0))))
     elif algorithm == 'DDA':
-        pass
+        dx = x1 - x0
+        dy = y1 - y0
+        steps = max(abs(dx), abs(dy))
+        delta_x = dx/steps
+        delta_y = dy/steps
+        cur_x = x0
+        cur_y = y0
+        for i in range(steps):
+            result.append([int(cur_x), int(cur_y)])
+            cur_x += delta_x
+            cur_y += delta_y
+        result.append([int(x1), int(y1)])
+
     elif algorithm == 'Bresenham':
         pass
     return result
