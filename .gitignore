@@ -1,5 +1,4 @@
 *.txt
 /imgs/*
 /CG_demo/__pycache__/*
-
 *.pyc
