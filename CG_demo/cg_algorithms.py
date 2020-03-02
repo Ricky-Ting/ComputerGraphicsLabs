@@ -177,7 +177,14 @@ def rotate(p_list, x, y, r):
     :param r: (int) 顺时针旋转角度（°）
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 变换后的图元参数
     """
-    pass
+    result = []
+    cosTheta = math.cos(r/180 * math.pi)
+    sinTheta = math.sin(r/180 * math.pi)
+    for x1,y1 in p_list:
+        dx = x1 - x
+        dy = y1 - y
+        result.append([round(x + dx*cosTheta - dy*sinTheta), round(y + dx*sinTheta + dy*cosTheta)])
+    return result
 
 
 def scale(p_list, x, y, s):
