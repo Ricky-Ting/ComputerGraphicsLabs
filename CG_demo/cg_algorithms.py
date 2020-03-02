@@ -89,7 +89,59 @@ def draw_ellipse(p_list):
     :param p_list: (list of list of int: [[x0, y0], [x1, y1]]) 椭圆的矩形包围框左上角和右下角顶点坐标
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 绘制结果的像素点坐标列表
     """
-    pass
+    result = []
+    [x0, y0], [x1, y1] = p_list
+    x_mid, y_mid = round((x0+x1)/2), round((y0+y1)/2)
+    a, b = round(abs(x1-x0)/2), round(abs(y1-y0)/2)
+
+    x, y = 0, b
+
+
+    # decision boundary 1
+    d1 = ((b * b) - (a * a * b) + (0.25 * a * a))
+    dx = 2 * b * b * x  
+    dy = 2 * a * a * y
+
+    # region 1
+    while (dx < dy):  
+        result.append([x+x_mid, y+y_mid])
+        result.append([x+x_mid, -y+y_mid])
+        result.append([-x+x_mid, y+y_mid])
+        result.append([-x+x_mid, -y+y_mid])
+
+        if (d1 < 0):  
+            x += 1;  
+            dx = dx + (2 * b * b)  
+            d1 = d1 + dx + (b * b)
+        else: 
+            x += 1;  
+            y -= 1;  
+            dx = dx + (2 * b * b)  
+            dy = dy - (2 * a * a)
+            d1 = d1 + dx - dy + (b * b)
+
+
+    # decision boundary 2
+    d2 = (((b * b) * ((x + 0.5) * (x + 0.5))) + ((a * a) * ((y - 1) * (y - 1))) - (a * a * b * b)) 
+  
+    # region 2  
+    while (y >= 0): 
+        result.append([x+x_mid, y+y_mid])
+        result.append([x+x_mid, -y+y_mid])
+        result.append([-x+x_mid, y+y_mid])
+        result.append([-x+x_mid, -y+y_mid])
+  
+        if (d2 > 0): 
+            y -= 1;  
+            dy = dy - (2 * a * a);  
+            d2 = d2 + (a * a) - dy;  
+        else: 
+            y -= 1;  
+            x += 1;  
+            dx = dx + (2 * b * b);  
+            dy = dy - (2 * a * a);  
+            d2 = d2 + dx - dy + (a * a);
+    return result
 
 
 def draw_curve(p_list, algorithm):
