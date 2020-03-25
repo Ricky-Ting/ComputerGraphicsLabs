@@ -84,6 +84,7 @@ def draw_polygon(p_list, algorithm):
     for i in range(len(p_list)):
         line = draw_line([p_list[i - 1], p_list[i]], algorithm)
         result += line
+    result += draw_line([p_list[0], p_list[len(p_list)-1]], algorithm)
     return result
 
 
