@@ -15,6 +15,10 @@ def draw_line(p_list, algorithm):
     x0, y0 = p_list[0]
     x1, y1 = p_list[1]
     result = []
+    if x0 == x1 and y0 == y1:
+        result.append((x0, y0));
+        return result
+    
     if algorithm == 'Naive':
         if x0 == x1:
             for y in range(y0, y1 + 1):
@@ -29,10 +33,6 @@ def draw_line(p_list, algorithm):
         delta_x = x1 - x0
         delta_y = y1 - y0
         steps = max(abs(delta_x), abs(delta_y))
-        if steps == 0:
-            result.append([x0, y0])
-            return result
-
         dx = delta_x/steps
         dy = delta_y/steps
         cur_x = x0
