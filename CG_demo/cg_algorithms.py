@@ -29,6 +29,10 @@ def draw_line(p_list, algorithm):
         delta_x = x1 - x0
         delta_y = y1 - y0
         steps = max(abs(delta_x), abs(delta_y))
+        if steps == 0:
+            result.append([x0, y0])
+            return result
+
         dx = delta_x/steps
         dy = delta_y/steps
         cur_x = x0
