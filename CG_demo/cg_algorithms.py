@@ -147,7 +147,20 @@ def draw_curve(p_list, algorithm):
     :param algorithm: (string) 绘制使用的算法，包括'Bezier'和'B-spline'（三次均匀B样条曲线，曲线不必经过首末控制点）
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 绘制结果的像素点坐标列表
     """
-    pass
+    result = []
+    if algorithm == 'Bezier':
+        n = len(p_list)
+        if n<2:
+            return result
+        t = 0.001
+        result.append(p_list[0])
+        for i in range(1, 1000):
+            result.append(draw_Bezier(p_list, t))
+            t = t + 0.001
+        result.append(p_list[n-1])
+
+    return result
+
 
 
 def translate(p_list, dx, dy):
@@ -212,3 +225,28 @@ def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1]]) 裁剪后线段的起点和终点坐标
     """
     pass
+
+
+
+
+def draw_Bezier(p_list, t):
+    n = len(p_list)
+    P = []
+    for point in p_list:
+        P.append(point)
+    i = n
+    while(i>1):
+        for j in range(0, i-1):
+            x = P[j][0]*t + P[j+1][0]*(1-t)
+            y = P[j][1]*t + P[j+1][1]*(1-t)
+            P[j] = (x, y)
+        i = i - 1
+
+    return (round(P[0][0]), round(P[0][1]))
+    
+    '''
+    for i = n; i>1; i--:
+        for j = 0; j<i-1; j++:
+            P[j] = P[j]*t + P[j+1]*(1-t)
+    return P[0]
+    '''
