@@ -54,7 +54,7 @@ def draw_line(p_list, algorithm):
             y0, y1 = y1, y0
         delta_x = x1 - x0
         delta_y = abs(y1 - y0)
-        error = delta_x / 2
+        error = delta_x // 2
         y = y0
         if y0 > y1:
             ystep = -1
