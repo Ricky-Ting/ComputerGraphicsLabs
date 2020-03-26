@@ -236,7 +236,112 @@ def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
     :param algorithm: (string) 使用的裁剪算法，包括'Cohen-Sutherland'和'Liang-Barsky'
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1]]) 裁剪后线段的起点和终点坐标
     """
-    pass
+
+    if algorithm == 'Cohen-Sutherland':
+        A = p_list[0]
+        B = p_list[1]
+        result = []
+        # 从右到左 为 左边界 右边界 上边界 下边界
+
+        if A[0] == B[0]:
+            if A[0] < x_min or A[0] > x_max:
+                result.append([0, 0])
+                result.append([0, 0])
+                return result
+            else:
+                if A[1] > y_max:
+                    A[1] = y_max
+                elif A[1] < y_min:
+                    A[1] = y_min
+                if B[1] > y_max:
+                    B[1] = y_max
+                elif B[1] < y_min:
+                    B[1] = y_min
+                result.append(A)
+                result.append(B)
+                return result
+        elif A[1] == B[1]:
+            if A[1] < y_min or A[1] > y_max:
+                result.append([0, 0])
+                result.append([0, 0])
+                return result
+            else:
+                if A[0] > x_max:
+                    A[0] = x_max
+                elif A[0] < x_min:
+                    A[0] = x_min
+                if B[0] > x_max:
+                    B[0] = x_max
+                elif B[0] < x_min:
+                    B[0] = x_min
+                result.append(A)
+                result.append(B)
+                return result
+
+        while True:
+            A_bits = 0
+            B_bits = 0
+
+            if A[0] < x_min:
+                A_bits = A_bits + 0x1
+            if A[0] > x_max:
+                A_bits = A_bits + 0x2
+            if A[1] < y_min:
+                A_bits = A_bits + 0x4
+            if A[1] > y_max:
+                A_bits = A_bits + 0x8
+
+            if B[0] < x_min:
+                B_bits = B_bits + 0x1
+            if B[0] > x_max:
+                B_bits = B_bits + 0x2
+            if B[1] < y_min:
+                B_bits = B_bits + 0x4
+            if B[1] > y_max:
+                B_bits = B_bits + 0x8
+
+            if A_bits == 0 and B_bits == 0: # 均在区域内
+                result.append( [round(A[0]), round(A[1]) ] )
+                result.append( [round(B[0]), round(B[1]) ] )
+                return result
+            if A_bits&B_bits != 0:
+                result.append([0,0])
+                result.append([0,0])
+                return result
+            k = (B[1] - A[1]) / (B[0] - A[0])
+            if A_bits&0x1 != 0 or B_bits&0x1 != 0:
+                if A_bits&0x1 == 0:
+                    A_bits, B_bits = B_bits, A_bits
+                    A, B = B, A
+                A = [x_min, A[1] + k*(x_min - A[0])]
+                continue
+    
+            if A_bits&0x2 != 0 or B_bits&0x2 != 0:
+                if A_bits&0x2 == 0:
+                    A_bits, B_bits = B_bits, A_bits
+                    A, B = B, A
+                A = [x_max, A[1] + k*(x_max - A[0])]
+                continue
+            if A_bits&0x4 != 0 or B_bits&0x4 != 0:
+                if A_bits&0x4 == 0:
+                    A_bits, B_bits = B_bits, A_bits
+                    A, B = B, A
+                A = [(y_min - A[1])/k + A[0], y_min]
+                continue
+            if A_bits&0x8 != 0 or B_bits&0x8 != 0:
+                if A_bits&0x8 == 0:
+                    A_bits, B_bits = B_bits, A_bits
+                    A, B = B, A
+                A = [(y_max - A[1])/k + A[0], y_max]
+                continue
+        
+        
+
+
+
+
+
+
 
 
 
@@ -251,10 +356,10 @@ def draw_Bezier(p_list, t):
         for j in range(0, i-1):
             x = P[j][0]*t + P[j+1][0]*(1-t)
             y = P[j][1]*t + P[j+1][1]*(1-t)
-            P[j] = (x, y)
+            P[j] = [x, y]
         i = i - 1
 
-    return (round(P[0][0]), round(P[0][1]))
+    return [round(P[0][0]), round(P[0][1])]
 
     '''
     for i = n; i>1; i--:
@@ -272,7 +377,7 @@ def getBsplinePoint(p_list, T, t, k):
         alpha = getN(i, k, t, T)
         x = x + alpha * p[0]
         y = y + alpha * p[1]
-    return (round(x), round(y))
+    return [round(x), round(y)]
 
 def getN(i, k, t, T):
     if k == 1:
