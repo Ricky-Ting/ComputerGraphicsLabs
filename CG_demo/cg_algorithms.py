@@ -158,7 +158,19 @@ def draw_curve(p_list, algorithm):
             result.append(draw_Bezier(p_list, t))
             t = t + 0.001
         result.append(p_list[n-1])
+    elif algorithm == 'B-spline':
+        k = 3 # 3阶
+        n = len(p_list) - 1
+        #T = []
+        #for i in range(n+k+1 + 1):
+        #    T.append(i)
+        step = 0.001
 
+        for T in range(k, n+1):
+            t = float(T)
+            while(t < T+1):
+                result.append(getBsplinePoint(p_list, T, t, k+1))
+                t = t + 0.001
     return result
 
 
@@ -243,10 +255,29 @@ def draw_Bezier(p_list, t):
         i = i - 1
 
     return (round(P[0][0]), round(P[0][1]))
-    
+
     '''
     for i = n; i>1; i--:
         for j = 0; j<i-1; j++:
             P[j] = P[j]*t + P[j+1]*(1-t)
     return P[0]
     '''
+
+
+def getBsplinePoint(p_list, T, t, k):
+    x = 0.0 
+    y = 0.0
+    for i in range(len(p_list)):
+        p = p_list[i]
+        alpha = getN(i, k, t, T)
+        x = x + alpha * p[0]
+        y = y + alpha * p[1]
+    return (round(x), round(y))
+
+def getN(i, k, t, T):
+    if k == 1:
+        if i == T:
+            return 1
+        else:
+            return 0
+    return (t-i)/(k-1)*getN(i, k-1, t, T) + (i+k-t)/(k-1)*getN(i+1, k-1, t, T)
