@@ -334,15 +334,28 @@ def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
                     A, B = B, A
                 A = [(y_max - A[1])/k + A[0], y_max]
                 continue
-        
-        
-
-
-
-
-
-
-
+    elif algorithm == 'Liang-Barsky':
+        x0, y0 = p_list[0]
+        x1, y1 = p_list[1]
+        dx = x1 - x0
+        dy = y1 - y0
+        result = []
+        p = [-dx, dx, -dy, dy]
+        q = [x0 - x_min, x_max - x0, y0 - y_min, y_max - y0]
+        t1, t2 = 0.0, 1.0
+        for i in range(4):
+            if p[i] < 0:
+                t1 = max(t1, q[i]/p[i])
+            elif p[i] > 0:
+                t2 = min(t2, q[i]/p[i])
+            else:
+                if(q[i] < 0):
+                    result.append([0,0])
+                    result.append([0,0])
+                    return result
+        result.append([round(x0 + t1*dx), round(y0 + t1*dy)])
+        result.append([round(x0 + t2*dx), round(y0 + t2*dy)])
+        return result
 
 
 
