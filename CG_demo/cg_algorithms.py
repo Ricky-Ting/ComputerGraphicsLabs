@@ -152,7 +152,7 @@ def draw_curve(p_list, algorithm):
         n = len(p_list)
         if n<2:
             return result
-        t = 0.001
+        t = 0.01
         result.append(p_list[0])
         for i in range(1, 1000):
             result.append(draw_Bezier(p_list, t))
@@ -164,7 +164,7 @@ def draw_curve(p_list, algorithm):
         #T = []
         #for i in range(n+k+1 + 1):
         #    T.append(i)
-        step = 0.001
+        step = 0.01
 
         for T in range(k, n+1):
             t = float(T)
@@ -223,6 +223,8 @@ def scale(p_list, x, y, s):
         dy = y1 - y 
         result.append([round(x + dx*s), round(y + dy*s)])
     return result
+
+
 
 
 def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
@@ -353,6 +355,10 @@ def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
                     result.append([0,0])
                     result.append([0,0])
                     return result
+        if t1 > 1.0 or t2 < 0.0:
+            result.append([0, 0])
+            result.append([0, 0])
+            return result
         result.append([round(x0 + t1*dx), round(y0 + t1*dy)])
         result.append([round(x0 + t2*dx), round(y0 + t2*dy)])
         return result
