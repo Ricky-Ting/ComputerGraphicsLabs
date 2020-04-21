@@ -1,5 +1,5 @@
 import gui
-import sys
+import sys, os
 import math
 import cg_algorithms as alg
 import sip
@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QInputDialog,
     QColorDialog,
+    QFileDialog,
     QStyleOptionGraphicsItem)
 from PyQt5.QtGui import QPainter, QMouseEvent, QColor, QIcon, QImage, QPixmap
 from PyQt5.QtCore import QRectF, Qt
@@ -576,19 +577,12 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
 
     def update_ui(self) -> None:
 
-
-        # 更新主界面
-
-        self.set_canvas(600, 600)
-        self.setWindowTitle('Painter')
-
-
-
         # 设置菜单
         menubar = self.menuBar()
         file_menu = menubar.addMenu('文件')
         file_menu.addAction('设置画笔', self.set_color)
         file_menu.addAction('重置画布', self.reset_canvas)
+        file_menu.addAction('保存文件', self.save_file)
         file_menu.addAction('退出', qApp.quit)
 
         draw_menu = menubar.addMenu('绘制')
@@ -620,6 +614,10 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         help_menu = menubar.addMenu('帮助')
         help_menu.addAction('关于', self.about)
 
+        # 更新主界面
+
+        self.set_canvas(600, 600)
+        self.setWindowTitle('Painter')
 
         # 设置button
 
@@ -666,7 +664,7 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         return
 
     def get_icon(self, path):
-        img = QImage(path)
+        img = QImage(os.path.join(bundle_dir, path))
         pixmap = QPixmap(img)
         fitPixmap = pixmap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         icon = QIcon(fitPixmap)
@@ -686,6 +684,13 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
             sip.delete(self.list_widget)
             sip.delete(self.canvas_widget)
             self.set_canvas(w, h)
+
+    def save_file(self):
+        fileName, _ = QFileDialog.getSaveFileName(self, "Save File", "/", "Images (*.png *.jpg *.bmp)")
+        if fileName != '':
+            pixMap = self.canvas_widget.grab(self.canvas_widget.sceneRect().toRect())
+            pixMap.save(fileName)
+        #print(fileName)
 
     def set_canvas(self, w, h):
         # 使用QListWidget来记录已有的图元，并用于选择图元
@@ -722,6 +727,14 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         
 
 if __name__ == '__main__':
+    if getattr(sys, 'frozen', False):
+        # we are running in a bundle
+        bundle_dir = sys._MEIPASS
+    else:
+        # we are running in a normal Python environment
+        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+
+
     app = QApplication(sys.argv)
     ui = cgUI()
     ui.show()
