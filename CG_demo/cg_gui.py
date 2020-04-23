@@ -573,9 +573,14 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         self.setupUi(self)  # 设置基本UI
         self.update_ui()    # 添加控件
         self.item_cnt = 0
+
         return
 
     def update_ui(self) -> None:
+        # 更新主界面
+        self.set_canvas(600, 600)
+        self.setWindowTitle('Painter')
+
 
         # 设置菜单
         menubar = self.menuBar()
@@ -613,11 +618,6 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
 
         help_menu = menubar.addMenu('帮助')
         help_menu.addAction('关于', self.about)
-
-        # 更新主界面
-
-        self.set_canvas(600, 600)
-        self.setWindowTitle('Painter')
 
         # 设置button
 
