@@ -19,9 +19,10 @@ from PyQt5.QtWidgets import (
     QInputDialog,
     QColorDialog,
     QFileDialog,
+    QVBoxLayout,
     QStyleOptionGraphicsItem)
 from PyQt5.QtGui import QPainter, QMouseEvent, QColor, QIcon, QImage, QPixmap
-from PyQt5.QtCore import QRectF, Qt
+from PyQt5.QtCore import QRectF, Qt, QSize
 
 
 def getAngle(v1, v2):
@@ -680,7 +681,7 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
             w = int(strs[0].strip())
             h = int(strs[1].strip())
             self.horizontalLayout.removeWidget(self.list_widget)
-            self.horizontalLayout.removeWidget(self.canvas_widget)
+            #self.horizontalLayout.removeWidget(self.canvas_widget)
             sip.delete(self.list_widget)
             sip.delete(self.canvas_widget)
             self.set_canvas(w, h)
@@ -688,8 +689,19 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
     def save_file(self):
         fileName, _ = QFileDialog.getSaveFileName(self, "Save File", "/", "Images (*.png *.jpg *.bmp)")
         if fileName != '':
-            pixMap = self.canvas_widget.grab(self.canvas_widget.sceneRect().toRect())
+            #pixMap = self.canvas_widget.grab(self.canvas_widget.scene().sceneRect().toRect())
+            pixMap = self.canvas_widget.grab()
             pixMap.save(fileName)
+
+            #image = self.canvas_widget.scene().toImage()
+            #image.save(fileName)
+
+            #image = QImage(QSize(self.canvas_widget.scene().width(), self.canvas_widget.scene().height()), QImage.Format_RGB32)
+            #painter = QPainter(image)
+            #self.canvas_widget.scene().render(painter);
+            #image.save(fileName)
+
+
         #print(fileName)
 
     def set_canvas(self, w, h):
@@ -701,12 +713,18 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, w, h)
         self.canvas_widget = MyCanvas(self.scene, self)
-        self.canvas_widget.setFixedSize(600, 600)
+        self.canvas_widget.setFixedSize(w, h)
         self.canvas_widget.main_window = self
         self.canvas_widget.list_widget = self.list_widget
         self.canvas_widget.setMouseTracking(True)
 
-        self.horizontalLayout.addWidget(self.canvas_widget)
+        #self.horizontalLayout.addWidget(self.canvas_widget)
+        #self.Tab.removeTab(1)
+        #self.Tab.removeTab(0)
+        #self.Tab.addTab(self.canvas_widget, "canvas")
+
+        self.scrollArea.setWidget(self.canvas_widget)
+
         self.horizontalLayout.addWidget(self.list_widget, stretch=1)
         self.central_widget = QWidget()
         self.central_widget.setLayout(self.horizontalLayout)
