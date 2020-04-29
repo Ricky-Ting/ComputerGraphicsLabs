@@ -84,6 +84,7 @@ class MyCanvas(QGraphicsView):
             self.main_window.statusBar().showMessage("缩放图元")
         elif self.status == 'clip':
             self.main_window.statusBar().showMessage("裁剪线段")
+        return
 
 
 
@@ -575,18 +576,18 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         self.update_ui()    # 添加控件
         self.item_cnt = 0
 
-        return
-
     def update_ui(self) -> None:
         # 更新主界面
         self.set_canvas(600, 600)
         self.setWindowTitle('Painter')
 
-
         # 设置菜单
+
         menubar = self.menuBar()
+        menubar.setNativeMenuBar(False)
         file_menu = menubar.addMenu('文件')
         file_menu.addAction('设置画笔', self.set_color)
+
         file_menu.addAction('重置画布', self.reset_canvas)
         file_menu.addAction('保存文件', self.save_file)
         file_menu.addAction('退出', qApp.quit)
@@ -620,7 +621,10 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         help_menu = menubar.addMenu('帮助')
         help_menu.addAction('关于', self.about)
 
+
+
         # 设置button
+
 
         self.line_button.clicked.connect(lambda: self.item_action("line", "DDA"))
         self.polygon_button.clicked.connect(lambda: self.item_action('polygon', "DDA"))
@@ -745,6 +749,7 @@ class cgUI(QMainWindow, gui.Ui_MainWindow):
         
 
 if __name__ == '__main__':
+
     if getattr(sys, 'frozen', False):
         # we are running in a bundle
         bundle_dir = sys._MEIPASS
