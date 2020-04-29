@@ -229,6 +229,9 @@
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QScrollArea" name="scrollArea">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="verticalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
