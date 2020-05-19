@@ -36,9 +36,9 @@ def getAngle(v1, v2):
     angle = math.acos(cos_angle) / math.pi *180
     cross_product = x1*y2 - x2*y1
     if cross_product >= 0:
-        return angle
-    else:
         return -angle
+    else:
+        return angle
 
 
 

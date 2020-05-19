@@ -199,6 +199,7 @@ def rotate(p_list, x, y, r):
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 变换后的图元参数
     """
     result = []
+    r = -r
     cosTheta = math.cos(r/180 * math.pi)
     sinTheta = math.sin(r/180 * math.pi)
     for x1,y1 in p_list:
